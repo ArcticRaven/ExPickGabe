@@ -1,0 +1,53 @@
+#==================#
+#    ExPickaxes    #
+#  ver GabeZillia  #
+#   ArcticRaven_   #
+#==================#
+
+options:
+	#This sets the maximum amout of blocks the pickaxes can break
+	EpickMaxHealth : 1561
+	
+	#These set the thresholds for the notifications, by setting thier value above the EpickMaxHealth value, they will be removed
+	EpickNotif1 : 1400
+	EpickNotif2 : 1500
+	
+	#This will enable the explosion effect for ALL players, also plays the explosion sound
+	ExpickEffect : true
+	
+command ExPick <player=%player%>:
+	usage: /expick <player>
+	aliases: ExPick
+	permission: expick.give
+	permission message: &7&l[&4&lExPick&7&l] &cYou do not have the required permission to perform this command
+	trigger:
+		give diamond pickaxe with lore "&6Explosive 3x3x3" to arg-2
+
+command ExpickToggle:
+	usage: /expicktoggle <text="false">
+	permission: expick.toggle
+	permission message: &7&l[&4&lExPick&7&l] &cYou do not have the required permission to perform this command
+	trigger:
+		if arg-1 is "false":
+			set {_enabled} to false
+			message "&7&l[&4&lExPick&7&l] is toggled off"
+		if arg-2 is "true":
+			set {_enabled} to true
+			message "&7&l[&4&lExPick&7&l] is toggled on"
+
+on block break:
+	if {_enabled} is true:
+		if player is holding a diamond pickaxe with lore "&6Explosive 3x3x3":
+			loop blocks in radius 1.75 of event-block:
+				if loop-blocks are stone or cobblestone or diorite or granite or andesite or sandstone or stone bricks or netherrack or nether bricks or endstone:
+					break loop-blocks naturally using player's tool
+					add 1 to {uses.%player%}
+		if {uses.%player%} is {@EpickNotif1}:
+			send action bar "&6Your Explosive Pickaxe will break soon!" to player
+		if {uses.%player%} is {@EpickNotif2}:
+			send action bar "&cYour Explosive Pickaxe will break very soon!" to player
+		if {uses.%player%} is {@EpickMaxHealth}:
+			set player's tool to air
+			set {uses.%player%} to 0
+			play sound "entity.item.break" with volume .75 to player
+			send action bar "&4Your Explosive Pickaxe has broken!" to player
