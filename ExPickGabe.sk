@@ -21,7 +21,7 @@ command ExPick <player=%player%>:
 	permission: expick.give
 	permission message: &7&l[&4&lExPick&7&l] &cYou do not have the required permission to perform this command
 	trigger:
-		give diamond pickaxe with lore "&6Explosive 3x3x3" to arg-2
+		give diamond pickaxe with lore "&6Explosive 3x3x3" to arg-1
 
 command ExpickToggle:
 	usage: /expicktoggle <text="false">
@@ -31,7 +31,7 @@ command ExpickToggle:
 		if arg-1 is "false":
 			set {_enabled} to false
 			message "&7&l[&4&lExPick&7&l] is toggled off"
-		if arg-2 is "true":
+		if arg-1 is "true":
 			set {_enabled} to true
 			message "&7&l[&4&lExPick&7&l] is toggled on"
 
@@ -51,3 +51,4 @@ on block break:
 			set {uses.%player%} to 0
 			play sound "entity.item.break" with volume .75 to player
 			send action bar "&4Your Explosive Pickaxe has broken!" to player
+
